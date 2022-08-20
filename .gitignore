@@ -1,0 +1,4 @@
+hosts_*
+backup/*
+host_vars/*
+!host_vars/my_node*

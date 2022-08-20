@@ -1,0 +1,6 @@
+---
+- name: setup
+  hosts: validator1
+  become: yes
+  roles:
+  - machine-setup

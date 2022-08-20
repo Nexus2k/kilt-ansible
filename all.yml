@@ -1,0 +1,13 @@
+# This playbook deploys a full collator from scratch.
+---
+- name: setup machine
+  hosts: collator
+  become: yes
+  roles:
+    - machine-setup
+
+- name: Setup collator
+  hosts: collator
+  become: yes
+  roles:
+    - kilt-node

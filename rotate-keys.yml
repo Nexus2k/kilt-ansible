@@ -1,0 +1,6 @@
+---
+- name: Rotate collator keys
+  hosts: collator
+  become: yes
+  roles:
+    - polkadot-rotate-keys

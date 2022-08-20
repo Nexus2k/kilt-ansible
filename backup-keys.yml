@@ -1,0 +1,6 @@
+---
+- name: Backup collator keys
+  hosts: collator
+  become: yes
+  roles:
+    - kilt-backup-keys

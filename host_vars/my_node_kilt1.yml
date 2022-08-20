@@ -1,0 +1,10 @@
+---
+node_name: 'MyKiltCollator' # Change this!
+chain: spiritnet
+docker_name: my_kilt_container
+p2p_listen: 30336
+p2p_relay_listen: 30335
+# Keep these bound to 127.0.0.1 you otherwise expose the ports to the public!
+rpc_listen: 127.0.0.1:9935
+ws_listen: 127.0.0.1:9946
+db_path: '~/{{chain}}'
