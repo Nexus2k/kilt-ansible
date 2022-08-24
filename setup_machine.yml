@@ -1,6 +1,6 @@
 ---
 - name: setup
-  hosts: validator1
+  hosts: collator
   become: yes
   roles:
   - machine-setup
