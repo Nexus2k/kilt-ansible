@@ -20,13 +20,12 @@
         version: '3'
         services:
             kilt:
-                image: kiltprotocol/kilt-node:1.13.2
+                image: kiltprotocol/kilt-node:latest
                 container_name: '{{ docker_name }}'
                 command:
                     [
                         "--name={{ node_name }}",
-                        "--chain={{ chain }}",
-                        "--runtime={{ chain }}",
+                        "--chain=/node/chainspecs/spiritnet/spiritnet.json",
                         "--base-path=/data/parachain",
                         "--keystore-path=/data/keystore",
                         "--rpc-port=9933",
