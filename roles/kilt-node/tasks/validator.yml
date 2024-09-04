@@ -20,7 +20,7 @@
         version: '3'
         services:
             kilt:
-                image: kiltprotocol/kilt-node:latest
+                image: kiltprotocol/kilt-node:1.13.2
                 container_name: '{{ docker_name }}'
                 command:
                     [
@@ -35,17 +35,17 @@
                         "--unsafe-rpc-external",
                         "--listen-addr=/ip4/0.0.0.0/tcp/30336",
                         "--public-addr=/ip4/{{ ansible_default_ipv4.address }}/tcp/{{ p2p_listen }}",
-                        "--pruning=1000",
+                        "--blocks-pruning=256",
+                        "--state-pruning=256",
                         "--collator",
-                        "--execution=wasm",
                         "--no-mdns",
                         "--",
                         "--chain=polkadot",
                         "--listen-addr=/ip4/0.0.0.0/tcp/30335",
                         "--public-addr=/ip4/{{ ansible_default_ipv4.address }}/tcp/{{ p2p_relay_listen }}",
-                        "--execution=wasm",
                         "--base-path=/data/relay",
-                        "--pruning=1000",
+                        "--blocks-pruning=256",
+                        "--state-pruning=256",
                         "--name={{ node_name }} - {{ chain }} relay",
                         "--no-mdns"
                     ]
