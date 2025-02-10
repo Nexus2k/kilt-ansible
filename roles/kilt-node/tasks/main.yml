@@ -1,3 +1,69 @@
 ---
+- name: Clean running node
+  docker_container:
+    name: '{{ docker_name }}'
+    state: absent
+  ignore_errors: yes
 
-- include: validator.yml
+- name: Setup db path
+  file:
+    path: '{{ db_path }}'
+    state: directory
+    owner: 1000
+    group: 1000
+
+- name: Spin up docker
+  docker_compose:
+    project_name: '{{ docker_name }}'
+    pull: yes
+    definition:
+        version: '3'
+        services:
+            kilt:
+                image: kiltprotocol/kilt-node:latest
+                container_name: '{{ docker_name }}'
+                command:
+                    [
+                        "--name={{ node_name }}",
+                        "--chain=/node/chainspecs/spiritnet/spiritnet.json",
+                        "--base-path=/data/parachain",
+                        "--keystore-path=/data/keystore",
+                        "--rpc-port=9933",
+                        "--rpc-cors=all",
+                        "--rpc-methods=unsafe",
+                        "--unsafe-rpc-external",
+                        "--listen-addr=/ip4/0.0.0.0/tcp/30336",
+                        "--public-addr=/ip4/{{ ansible_default_ipv4.address }}/tcp/{{ p2p_listen }}",
+                        "--blocks-pruning=256",
+                        "--state-pruning=256",
+                        "--collator",
+                        "--no-mdns",
+                        "--no-private-ip",
+                        "--",
+                        "--chain=polkadot",
+                        "--listen-addr=/ip4/0.0.0.0/tcp/30335",
+                        "--public-addr=/ip4/{{ ansible_default_ipv4.address }}/tcp/{{ p2p_relay_listen }}",
+                        "--base-path=/data/relay",
+                        "--blocks-pruning=256",
+                        "--state-pruning=256",
+                        "--name={{ node_name }} - {{ chain }} relay",
+                        "--no-private-ip",
+                        "--no-mdns"
+                    ]
+                volumes:
+                - "{{ db_path }}:/data"
+                ports:
+                - "{{ rpc_listen }}:9933"
+                - "{{ ws_listen }}:9944"
+                - "{{ p2p_listen }}:30336"
+                - "{{ p2p_relay_listen }}:30335"
+                hostname: '{{ docker_name }}'
+                restart: unless-stopped
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- ansible.builtin.assert:
+    that:
+        - "output.services.kilt.{{ docker_name }}.state.running"
